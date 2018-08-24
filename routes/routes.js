@@ -61,7 +61,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/v', isLoggedIn, function(req, res){
-        req.render('valami.ejs', {
+        res.render('valami.ejs', {
             user: req.user
         })
     });
