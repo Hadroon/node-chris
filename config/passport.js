@@ -141,7 +141,7 @@ module.exports = function (passport) {
                 // check if the user is already logged in
                 if (!req.user) {
 
-                    User.findOne({ 'google.id': profile.id }, function (err, user) {
+                    User.findOne({ $or:[ {'google.id': profile.id}, { 'local.email': profile.emails[0].value }]}, function (err, user) {
                         if (err)
                             return done(err);
 
