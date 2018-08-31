@@ -13,10 +13,11 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
-var configDB = require('./config/database.js');
+var config = require('./config/config.js');
 
 
-mongoose.connect(configDB.url); // connect to our database
+// mongoose.connect(configDB.url); // connect to our database
+mongoose.connect(config.all.mongoUri); // connect to our database
 
 //--
 mongoose.Promise = global.Promise;
