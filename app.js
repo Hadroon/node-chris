@@ -37,7 +37,7 @@ app.set('views', path.join(__dirname, '/app/views')); // set up ejs for templati
 // required for passport
 // app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(session({
-    secret: 'ilovescotchscotchyscotchscotch',
+    secret: config.all.sessionSecret,
     saveUninitialized: true,
     resave: false,
     store   : new MongoStore({ mongooseConnection: db })
@@ -47,8 +47,5 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-
-// app.listen(port);
-// console.log('The magic happens on port ' + port);
 
 module.exports = app;
