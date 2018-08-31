@@ -93,6 +93,15 @@ module.exports = function (app, passport) {
             failureRedirect: '/'
         }));
 
+    app.get('/forgot', function (req, res) {
+        res.render('forgot.ejs');
+    });
+
+    app.post('/forgot', function (req, res) {
+        console.log(req.body.email);
+        res.render('forgot.ejs');
+    });
+
 
 };
 

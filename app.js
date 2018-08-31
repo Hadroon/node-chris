@@ -2,6 +2,7 @@ var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
+var path = require('path');
 //--
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -30,6 +31,7 @@ app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); // set up ejs for templating
+app.set('views', path.join(__dirname, '/app/views')); // set up ejs for templating
 
 // required for passport
 // app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
@@ -45,7 +47,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-app.listen(port);
-console.log('The magic happens on port ' + port);
+// app.listen(port);
+// console.log('The magic happens on port ' + port);
 
 module.exports = app;
