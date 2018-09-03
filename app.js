@@ -23,7 +23,7 @@ mongoose.connect(config.all.mongoUri); // connect to our database
 mongoose.Promise = global.Promise;
 const db = mongoose.connection
 
-require('./config/passport.js')(passport); // pass passport for configuration
+require('./app/controllers/passport.js')(passport); // pass passport for configuration
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -46,6 +46,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/controllers/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 module.exports = app;

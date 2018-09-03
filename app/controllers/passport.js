@@ -5,11 +5,11 @@ var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
-var User = require('../app/models/user');
+var User = require('../models/user');
 
 // load the auth variables
 // var configAuth = require('./auth');
-var config = require('./config.js');
+var config = require('../../config/config');
 var configAuth = config.all;
 
 
@@ -47,6 +47,16 @@ module.exports = function (passport) {
         passReqToCallback: true // allows us to pass back the entire request to the callback
     },
         function (req, email, password, done) {
+
+            var regexPatt = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+            var isValidEmail = regexPatt.test(email);
+            if(!isValidEmail) {
+                return done(null, false, req.flash('signupMessage', 'Kérlek ellenőrizd a megadott email címet.'));
+            }
+            
+            if(password.length < 6) {
+                return done(null, false, req.flash('signupMessage', 'A jelszónak legalább 6 karakter hosszúnak kell lennie.'));
+            }
 
             // asynchronous
             // User.findOne wont fire unless data is sent back
