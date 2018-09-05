@@ -3,6 +3,8 @@
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var RandomString = require('randomstring');
+var nodemailer = require('nodemailer');
 
 // load up the user model
 var User = require('../models/user');
@@ -50,11 +52,11 @@ module.exports = function (passport) {
 
             var regexPatt = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
             var isValidEmail = regexPatt.test(email);
-            if(!isValidEmail) {
+            if (!isValidEmail) {
                 return done(null, false, req.flash('signupMessage', 'Kérlek ellenőrizd a megadott email címet.'));
             }
-            
-            if(password.length < 6) {
+
+            if (password.length < 6) {
                 return done(null, false, req.flash('signupMessage', 'A jelszónak legalább 6 karakter hosszúnak kell lennie.'));
             }
 
@@ -72,6 +74,10 @@ module.exports = function (passport) {
 
                     // check to see if theres already a user with that email
                     if (user) {
+
+                        if (user.local.isEmailVerified === false) {
+                            return done(null, false, req.flash('signupMessage', 'Email címedre aktíváló emailt küldtünk. Kérünk aktíváld az email címedet'));
+                        }
 
                         // if already registered with google, just updating the user
                         if (user.google.email == email) {
@@ -99,13 +105,44 @@ module.exports = function (passport) {
                         // set the user's local credentials
                         newUser.local.email = email;
                         newUser.local.password = newUser.generateHash(password);
+                        newUser.local.isEmailVerified = false;
+                        newUser.local.emailVerificationToken = RandomString.generate({
+                            length: 64
+                        });
 
                         // save the user
                         newUser.save(function (err) {
                             if (err)
                                 throw err;
-                            return done(null, newUser);
+                            // return done(null, newUser);
+                            return done(null, false, req.flash('signupMessage', 'Email címedre aktíváló levelet küldtünk.'));
                         });
+                        
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'gabor.muranyi@gmail.com',
+                                pass: 'jelszo0500'
+                            }
+                        });
+                        
+                        var mailOptions = {
+                            from: 'gabor.muranyi@gmail.com',
+                            to: email,
+                            subject: 'Aktíváló email',
+                            html: '<a href="http://localhost:8080/verify/' + newUser.local.emailVerificationToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
+                        };
+                        
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                            }
+                        });
+
+                        
+                        
                     }
 
                 });
@@ -138,11 +175,14 @@ module.exports = function (passport) {
 
                 // if no user is found, return the message
                 if (!user)
-                    return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+                    return done(null, false, req.flash('loginMessage', 'Nem megfelelő email/jelszó.')); // req.flash is the way to set flashdata using connect-flash
+                
+                if (!user.local.isEmailVerified)
+                    return done(null, false, req.flash('loginMessage', 'Kérklek aktíváld az email címedet.')); // req.flash is the way to set flashdata using connect-flash
 
                 // if the user is found but the password is wrong
                 if (!user.validPassword(password))
-                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                    return done(null, false, req.flash('loginMessage', 'Nem megfelelő email/jelszó.')); // create the loginMessage and save it to session as flashdata
 
                 // all is well, return successful user
                 return done(null, user);
