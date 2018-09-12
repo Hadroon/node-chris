@@ -14,7 +14,7 @@
 
 <div class="col-sm-6 col-sm-offset-3">
 
-    <h1><span class="fa fa-sign-in"></span> Signup</h1>
+    <h1><span class="fa fa-sign-in"></span> Regisztráció</h1>
 
     <!-- show any messages that come back with authentication -->
     <% if (message.length > 0) { %>
@@ -28,17 +28,23 @@
             <input type="text" class="form-control" name="email">
         </div>
         <div class="form-group">
-            <label>Password</label>
+            <label>Jelszó</label>
             <input type="password" class="form-control" name="password">
         </div>
-
-        <button type="submit" class="btn btn-warning btn-lg">Signup</button>
+        <div class="form-group">
+            <label>Jelszó megerősítése</label>
+            <input type="password" class="form-control" name="passwordtwo">
+        </div>
+        <input type="checkbox" name="eula" value="1"> Elfogadom a <a href="#">szabályzatot</a>.<br>
+        <input type="checkbox" name="gdpr" value="1"> Elfogadom az <a href="#">adatvédelmi szabályzatot</a>.<br>
+        <p> </p>
+        <button type="submit" class="btn btn-warning btn-lg">Regisztráció</button>
     </form>
 
     <hr>
 
-    <p>Already have an account? <a href="/login">Login</a></p>
-    <p>Or go <a href="/">home</a>.</p>
+    <!-- <p>Already have an account? <a href="/login">Login</a></p>
+    <p>Or go <a href="/">home</a>.</p> -->
 
 </div>
 

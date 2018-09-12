@@ -1,22 +1,51 @@
-const Promise = require('bluebird');
-const mongoose = require('mongoose');
+var RandomString = require('randomstring');
+var nodemailer = require('nodemailer');
 
-const { ObjectId } = mongoose.Types;
+var User = require('../models/user');
+var Config = require('../../config/config');
 
-const Photo = mongoose.model('Photo');
-const Visit = mongoose.model('Visit');
+exports.get_forgot = function (req, res) {
+    res.render('forgot.ejs', {message: ''});
+};
 
-const isRecopyNeeded = visit => !visit.isImmediate && visit.configuration.recopy;
+exports.post_forgot = async function (req, res) {
+    var email = req.body.email;
+    let user;
+    try {
+        user = await User.findOne({ 'local.email': email });
+        user.local.resetPasswordToken = RandomString.generate({
+            length: 64
+        });
+        user.save(function (err) {
+            if (err)
+                throw err;
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send();
+    }
 
-const createPhotoTasks = Promise.coroutine(function* (job) {
-  const { photoId, visitId } = job.data;
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'gabor.muranyi@gmail.com',
+            pass: Config.all.gpass
+        }
+    });
 
+    var mailOptions = {
+        from: 'gabor.muranyi@gmail.com',
+        to: user.local.email,
+        subject: 'Jelszó törlése',
+        html: '<a href="http://localhost:8080/reset-password/' + user.local.resetPasswordToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
+    };
 
-  // -------------------------
-
-  module.exports = (app) => {
-    app.delete('/v3/photos/:id', wrap(function* (req, res) {
-      yield photoDeleter(req.params.id);
-      res.status(204).send();
-    }));
-  };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    res.render('forgot.ejs');
+};

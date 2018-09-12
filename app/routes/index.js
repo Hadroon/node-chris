@@ -56,24 +56,13 @@ router.get('/signup', function (req, res) {
 // process the signup form
 router.post('/signup', passport.authenticate('local-signup', {
     // successRedirect: '/profile', // redirect to the secure profile section
-    successRedirect: '/verify', // redirect to the secure profile section
+    successRedirect: '/signup', // redirect to the secure profile section
     failureRedirect: '/signup', // redirect back to the signup page if there is an error
     failureFlash: true // allow flash messages
 }));
 
-// Sending verification email.
-router.get('/verify/:emailToken', verifyEmail
-// function (req, res) {
-//     var token = req.params.emailToken;
-//     console.log(token);
-//     var user = verifyEmail(token).then();
-//     console.log('ez a visszakapott user: ');
-//     console.log(user);
-//     // console.log(user.email);
-//     // console.log(user.isEmailVerified);
-//     res.render('index.ejs');
-// }
-);
+// Verifying user
+router.get('/verify/:emailToken', verifyEmail);
 
 // =====================================
 // PROFILE SECTION =====================
@@ -114,16 +103,6 @@ router.get('/auth/google/callback',
         successRedirect: '/profile',
         failureRedirect: '/'
     }));
-
-router.get('/forgot', function (req, res) {
-    res.render('forgot.ejs');
-});
-
-router.post('/forgot', function (req, res) {
-    console.log(req.body.email);
-    res.render('forgot.ejs');
-});
-
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {

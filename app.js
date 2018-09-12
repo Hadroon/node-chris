@@ -12,6 +12,8 @@ var session      = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
 var indexRouter = require('./app/routes/index')
+var forgotRouter = require('./app/routes/forgotpassword')
+var resetRouter = require('./app/routes/resetpassword')
 var config = require('./config/config.js');
 
 mongoose.connect(config.all.mongoUri); // connect to our database
@@ -40,6 +42,8 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use('/', indexRouter);
+app.use('/forgot', forgotRouter);
+app.use('/reset-password', resetRouter);
 
 
 module.exports = app;

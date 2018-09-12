@@ -10,7 +10,11 @@ var userSchema = mongoose.Schema({
         email        : String,
         password     : String,
         emailVerificationToken: String,
-        isEmailVerified: Boolean
+        resetPasswordToken: String,
+        isEmailVerified: Boolean,
+        registered: { type : Date },
+        eula: Boolean,
+        gdpr: Boolean
     },
     facebook         : {
         id           : String,
