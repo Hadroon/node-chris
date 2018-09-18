@@ -147,7 +147,7 @@ module.exports = function (passport) {
                             from: 'noreply@wangaru-interactive.com',
                             to: email,
                             subject: 'Aktíváló email',
-                            html: '<a href="http://localhost:8080/verify/' + newUser.local.emailVerificationToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
+                            html: '<a href="http://' + req.headers.host + '/verify/' + newUser.local.emailVerificationToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
                         };
 
                         transporter.sendMail(mailOptions, function (error, info) {
@@ -238,7 +238,7 @@ module.exports = function (passport) {
                             if (!user.google.token) {
                                 user.google.token = token;
                                 user.google.name = profile.displayName;
-                                // user.name = profile.displayName;
+                                if (!user.name) user.name = profile.displayName;
                                 user.google.email = profile.emails[0].value; // pull the first email
                                 let date = new Date();
                                 date.setHours(date.getHours() + 2);
@@ -276,7 +276,7 @@ module.exports = function (passport) {
                     user.google.id = profile.id;
                     user.google.token = token;
                     user.google.name = profile.displayName;
-                    // user.name = profile.displayName;
+                    if (!user.name) user.name = profile.displayName;
                     user.google.email = profile.emails[0].value; // pull the first email
 
                     user.save(function (err) {

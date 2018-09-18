@@ -37,7 +37,7 @@ exports.post_forgot = async function (req, res) {
         from: 'gabor.muranyi@gmail.com',
         to: user.local.email,
         subject: 'Jelszó törlése',
-        html: '<a href="http://localhost:8080/reset-password/' + user.local.resetPasswordToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
+        html: '<a href="http://' + req.headers.host + '/reset-password/' + user.local.resetPasswordToken + '" class="btn btn-default">Akíváláshoz kérlek kattints ide.</a>'
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
