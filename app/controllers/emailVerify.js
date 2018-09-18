@@ -9,7 +9,7 @@ async function verifyEmail(req, res) {
         userTwo = await User.findOne({ 'local.emailVerificationToken': token });
         req.login(userTwo, function(err){
             if(err) return next(err);
-            res.redirect('/profile');
+            res.redirect('/');
         });
     } catch (err) {
         console.log(err);

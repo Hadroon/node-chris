@@ -22,6 +22,8 @@ mongoose.connect(config.all.mongoUri); // connect to our database
 mongoose.Promise = global.Promise;
 const db = mongoose.connection
 
+app.use(express.static('public'))
+
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)

@@ -11,18 +11,17 @@ require('../controllers/passport.js')(passport); // pass passport for configurat
 // =====================================
 router.get('/', function (req, res) {
 
-    res.render('index.ejs'); // load the index.ejs file
-
-    // console.log(req.user);
-
-    // if (req.user) {
-    //     res.redirect('/profile', { message: req.flash('signupMessage') })
-    //     // res.render('profile.ejs', {
-    //     //     user: req.user // get the user out of session and pass to template
-    //     // });
-    // } else {
-    //     res.render('index.ejs', { message: req.flash('signupMessage') }); // load the index.ejs file
-    // }
+    // res.render('index.ejs'); // load the index.ejs file
+    
+    console.log('user: ');
+    console.log(req.user);
+    
+    if (req.user) {
+        res.render('grid.ejs', { user: req.user }); // load the index.ejs file
+        
+    } else {
+        res.render('grid.ejs', { user: null }); // load the index.ejs file
+    }
 });
 
 
@@ -38,7 +37,7 @@ router.get('/login', function (req, res) {
 
 // process the login form
 router.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/profile', // redirect to the secure profile section
+    successRedirect: '/', // redirect to the secure profile section
     failureRedirect: '/login', // redirect back to the signup page if there is an error
     failureFlash: true // allow flash messages
 }));
@@ -100,7 +99,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 // the callback after google has authenticated the user
 router.get('/auth/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/profile',
+        successRedirect: '/',
         failureRedirect: '/'
     }));
 

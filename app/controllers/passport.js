@@ -124,6 +124,7 @@ module.exports = function (passport) {
                         newUser.local.registered = date;
                         newUser.local.eula = true;
                         newUser.local.gdpr = true;
+                        newUser.name = req.body.name;
                         
 
                         // save the user
@@ -237,6 +238,7 @@ module.exports = function (passport) {
                             if (!user.google.token) {
                                 user.google.token = token;
                                 user.google.name = profile.displayName;
+                                // user.name = profile.displayName;
                                 user.google.email = profile.emails[0].value; // pull the first email
                                 let date = new Date();
                                 date.setHours(date.getHours() + 2);
@@ -256,6 +258,7 @@ module.exports = function (passport) {
                             newUser.google.id = profile.id;
                             newUser.google.token = token;
                             newUser.google.name = profile.displayName;
+                            newUser.name = profile.displayName;
                             newUser.google.email = profile.emails[0].value; // pull the first email
 
                             newUser.save(function (err) {
@@ -273,6 +276,7 @@ module.exports = function (passport) {
                     user.google.id = profile.id;
                     user.google.token = token;
                     user.google.name = profile.displayName;
+                    // user.name = profile.displayName;
                     user.google.email = profile.emails[0].value; // pull the first email
 
                     user.save(function (err) {
