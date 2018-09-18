@@ -10,18 +10,10 @@ require('../controllers/passport.js')(passport); // pass passport for configurat
 // HOME PAGE (with login links) ========
 // =====================================
 router.get('/', function (req, res) {
-
-    // res.render('index.ejs'); // load the index.ejs file
-    
-    console.log('user: ');
-    console.log(req.user);
-    
     if (req.user) {
-        res.render('grid.ejs', { user: req.user }); // load the index.ejs file
-        
-    } else {
-        res.render('grid.ejs', { user: null }); // load the index.ejs file
+        return res.render('grid.ejs', { user: req.user }); // load the index.ejs file
     }
+    res.render('grid.ejs', { user: null }); // load the index.ejs file
 });
 
 

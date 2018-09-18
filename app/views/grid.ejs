@@ -19,7 +19,8 @@
         <div id="header">
             <div class="head-item">Az oldal neve</div>
             <% if (user) { %>
-            <div class="head-item pull-right"><a href="/profile" class="btn btn-default"><%= user.name %></a></div>
+            <div class="head-item pull-right"><a href="/profile" class="btn btn-default">
+                    <%= user.name %></a></div>
             <div class="head-item"><a href="/logout" class="btn btn-default">Kijelentkezés</a></div>
             <% } else { %>
             <div class="head-item pull-right"><a href="/login" class="btn btn-default">Belépés</a></div>
@@ -28,7 +29,14 @@
             <div class="head-item">Adatvédelem</div>
         </div>
         <div id="content">
-            <div class="content-item">Tudd meg minek tartottak a suliban!</div>
+            <div class="content-item">
+                <div style="position: relative;">
+                    <!-- <img style="width: 100%;" src="./images/dolgozat.jpg" alt=""> -->
+                    <img style="width: 100%;" src="./images/primary.jpg" alt="">
+                    <!-- <p style="position: absolute; left: 100px; top: 0px;">Tudd meg minek tartottak a suliban!</p> -->
+                    <p class="text">Tudd meg minek tartottak a suliban!</p>
+                </div>
+            </div>
             <div class="content-item">Okosabb vagy mint egy ötödikes?</div>
             <div class="content-item">Okosabb vagy mint egy ötödikes?</div>
             <div class="content-item">Okosabb vagy mint egy ötödikes?</div>
